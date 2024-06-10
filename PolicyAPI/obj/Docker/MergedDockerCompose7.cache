@@ -1,0 +1,61 @@
+name: dockercompose9527123965226645582
+services:
+  policyapi:
+    build:
+      context: F:\Local disk\NovacMSTrainingBatch2\PolicyAPI
+      dockerfile: PolicyAPI/Dockerfile
+    depends_on:
+      sqlserverinvservice:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+    image: policyapi
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\Dell\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Dell\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+  sqlserverinvservice:
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: vignesh
+    expose:
+      - "1433"
+    hostname: sqlserverinvservice
+    image: mcr.microsoft.com/mssql/server
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "1433"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: F:\Local disk\NovacMSTrainingBatch2\PolicyAPI\policyapi
+        target: /var/opt/mssql/data
+        bind:
+          create_host_path: true
+networks:
+  default:
+    name: dockercompose9527123965226645582_default
