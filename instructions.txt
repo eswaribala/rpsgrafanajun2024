@@ -1,0 +1,2 @@
+docker pull infiniflow/infinity:v0.1.1
+docker run -d --name infinity -v /var/infinity/:/var/infinity --ulimit nofile=500000:500000 --network=novanetwork infiniflow/infinity:v0.1.1
